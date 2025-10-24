@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="az">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diqqət - Tələb Olunan Yeganə Şey (Attention Is All You Need)</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.8;
+        color: #333;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .header .subtitle {
+        font-size: 1.2em;
+        opacity: 0.9;
+        margin-bottom: 20px;
+      }
+
+      .download-btn {
+        display: inline-block;
+        background: white;
+        color: #667eea;
+        padding: 12px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        margin-top: 15px;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .authors {
+        background: #f8f9fa;
+        padding: 25px 30px;
+        border-bottom: 2px solid #e9ecef;
+      }
+
+      .authors h3 {
+        color: #667eea;
+        margin-bottom: 15px;
+      }
+
+      .author-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+        font-size: 0.9em;
+      }
+
+      .content {
+        padding: 40px 30px;
+      }
+
+      .abstract {
+        background: #f0f4ff;
+        border-left: 4px solid #667eea;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-radius: 5px;
+      }
+
+      .abstract h2 {
+        color: #667eea;
+        margin-bottom: 15px;
+      }
+
+      .section {
+        margin-bottom: 40px;
+      }
+
+      .section h2 {
+        color: #667eea;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #667eea;
+      }
+
+      .section h3 {
+        color: #764ba2;
+        font-size: 1.4em;
+        margin: 25px 0 15px 0;
+      }
+
+      .section h4 {
+        color: #555;
+        font-size: 1.2em;
+        margin: 20px 0 10px 0;
+      }
+
+      .formula {
+        background: #f8f9fa;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 5px;
+        font-family: "Courier New", monospace;
+        overflow-x: auto;
+        text-align: center;
+        border-left: 4px solid #764ba2;
+      }
+
+      .table-container {
+        overflow-x: auto;
+        margin: 20px 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 0.9em;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+
+      th {
+        background: #667eea;
+        color: white;
+        font-weight: bold;
+      }
+
+      tr:nth-child(even) {
+        background: #f8f9fa;
+      }
+
+      .highlight {
+        background: #fff3cd;
+        padding: 2px 5px;
+        border-radius: 3px;
+      }
+
+      ul,
+      ol {
+        margin-left: 30px;
+        margin-bottom: 20px;
+      }
+
+      li {
+        margin-bottom: 10px;
+      }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        background: white;
+        padding: 15px 30px;
+        border-bottom: 2px solid #e9ecef;
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        z-index: 100;
+      }
+
+      .nav a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .nav a:hover {
+        color: #764ba2;
+      }
+
+      .footer {
+        background: #2c3e50;
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 1.8em;
+        }
+
+        .content {
+          padding: 20px 15px;
+        }
+
+        .nav {
+          padding: 10px 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🧠 Diqqət - Tələb Olunan Yeganə Şey</h1>
+        <div class="subtitle">Attention Is All You Need</div>
+        <p>Transformer Arxitekturasını təqdim edən tarixi məqalə</p>
+        <a
+          href="1706.03762v7.pdf"
+          class="download-btn"
+          onclick="downloadPDF(event)"
+          >📥 Orijinal Məqaləni Yüklə (PDF)</a
+        >
+      </div>
+
+      <div class="authors">
+        <h3>Müəlliflər:</h3>
+        <div class="author-grid">
+          <div>Ashish Vaswani (Google Brain)</div>
+          <div>Noam Shazeer (Google Brain)</div>
+          <div>Niki Parmar (Google Research)</div>
+          <div>Jakob Uszkoreit (Google Research)</div>
+          <div>Llion Jones (Google Research)</div>
+          <div>Aidan N. Gomez (Toronto Universiteti)</div>
+          <div>Łukasz Kaiser (Google Brain)</div>
+          <div>Illia Polosukhin</div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <a href="#abstract">Xülasə</a>
+        <a href="#intro">Giriş</a>
+        <a href="#model">Model</a>
+        <a href="#attention">Diqqət</a>
+        <a href="#training">Təlim</a>
+        <a href="#results">Nəticələr</a>
+      </div>
+
+      <div class="content">
+        <div id="abstract" class="abstract">
+          <h2>Xülasə</h2>
+          <p>
+            Dominant ardıcıllıq çevirmə modelləri kodlayıcı və dekodlaşdırıcı
+            ehtiva edən mürəkkəb rekurrent və ya konvolyusiya neyron
+            şəbəkələrinə əsaslanır. Ən yaxşı performans göstərən modellər eyni
+            zamanda kodlayıcı və dekodlaşdırıcını diqqət mexanizmi vasitəsilə
+            birləşdirir. Biz yalnız diqqət mexanizmlərinə əsaslanan,
+            rekurrentlik və konvolyusiyalardan tamamilə imtina edən yeni sadə
+            şəbəkə arxitekturası - Transformer-i təklif edirik.
+          </p>
+
+          <p>
+            İki maşın tərcüməsi tapşırığı üzərində aparılan eksperimentlər bu
+            modellərin keyfiyyət baxımından üstün, daha parallelləşdirilə bilən
+            və təlim üçün əhəmiyyətli dərəcədə az vaxt tələb etdiyini göstərir.
+            Modelimiz WMT 2014 İngilis-Alman tərcüməsi tapşırığında 28.4 BLEU
+            əldə edir və mövcud ən yaxşı nəticələri, o cümlədən ansamblları 2
+            BLEU-dan çox üstələyir.
+          </p>
+        </div>
+
+        <div id="intro" class="section">
+          <h2>1. Giriş</h2>
+          <p>
+            Rekurrent neyron şəbəkələri, xüsusən uzun qısamüddətli yaddaş (LSTM)
+            və qapılı rekurrent neyron şəbəkələri, ardıcıllıq modelləşdirmə və
+            dil modelləşdirməsi və maşın tərcüməsi kimi çevirmə problemlərində
+            ən müasir yanaşmalar kimi möhkəm şəkildə qurulmuşdur.
+          </p>
+
+          <p>
+            Rekurrent modellər adətən giriş və çıxış ardıcıllıqlarının simvol
+            mövqelərində hesablamaları amilləşdirir. Mövqeləri hesablama
+            vaxtında addımlarla uyğunlaşdıraraq, əvvəlki gizli vəziyyət h<sub
+              >t-1</sub
+            >
+            və t mövqeyi üçün girişin funksiyası olaraq gizli vəziyyətlər h<sub
+              >t</sub
+            >
+            ardıcıllığını yaradırlar. Bu təbii ardıcıl xarakter təlim
+            nümunələrində parallelləşməni istisna edir ki, bu da daha uzun
+            ardıcıllıq uzunluqlarında kritik hala gəlir.
+          </p>
+
+          <p>
+            <span class="highlight">Diqqət mexanizmləri</span> müxtəlif
+            tapşırıqlarda ardıcıllıq modelləşdirmə və çevirmə modellərinin
+            ayrılmaz hissəsinə çevrilmişdir və giriş və ya çıxış
+            ardıcıllıqlarındakı məsafələrindən asılı olmayaraq asılılıqların
+            modelləşdirilməsinə imkan verir. Bununla belə, bir neçə hal istisna
+            olmaqla, bu cür diqqət mexanizmləri rekurrent şəbəkə ilə birlikdə
+            istifadə olunur.
+          </p>
+
+          <p>
+            Bu işdə biz <strong>Transformer</strong>-i təklif edirik -
+            rekurrentlikdən imtina edən və bunun əvəzinə giriş və çıxış arasında
+            qlobal asılılıqları çəkmək üçün tamamilə diqqət mexanizminə
+            əsaslanan model arxitekturası. Transformer əhəmiyyətli dərəcədə daha
+            çox parallelləşməyə imkan verir və səkkiz P100 GPU-da cəmi on iki
+            saat təlim aldıqdan sonra tərcümə keyfiyyətində yeni ən müasir
+            səviyyəyə çata bilir.
+          </p>
+        </div>
+
+        <div id="model" class="section">
+          <h2>3. Model Arxitekturası</h2>
+          <p>
+            Ən rəqabətli neyron ardıcıllıq çevirmə modelləri
+            kodlayıcı-dekodlaşdırıcı strukturuna malikdir. Burada kodlayıcı
+            simvol təmsilləri giriş ardıcıllığını (x₁, ..., xₙ) davamlı
+            təmsillərin z = (z₁, ..., zₙ) ardıcıllığına əlaqələndirir. z
+            verildiyi halda, dekodlaşdırıcı bir anda bir element olmaqla
+            simvolların (y₁, ..., yₘ) çıxış ardıcıllığını yaradır.
+          </p>
+
+          <h3>3.1 Kodlayıcı və Dekodlaşdırıcı Yığınları</h3>
+
+          <h4>Kodlayıcı:</h4>
+          <p>
+            Kodlayıcı N = 6 eyni qatdan ibarət yığından təşkil olunmuşdur. Hər
+            qatda iki alt-qat var:
+          </p>
+          <ul>
+            <li>Birinci çox başlıqlı özünə-diqqət mexanizmidir</li>
+            <li>İkinci sadə, mövqe üzrə tam bağlı irəli bəsləmə şəbəkəsidir</li>
+          </ul>
+          <p>
+            Biz hər iki alt-qatın ətrafında qalıq bağlantısı tətbiq edirik,
+            ardınca qat normallaşdırması gəlir. Model çıxış ölçüsü d<sub
+              >model</sub
+            >
+            = 512-dir.
+          </p>
+
+          <h4>Dekodlaşdırıcı:</h4>
+          <p>
+            Dekodlaşdırıcı da N = 6 eyni qatdan ibarət yığından təşkil
+            olunmuşdur. Hər kodlayıcı qatındakı iki alt-qata əlavə olaraq,
+            dekodlaşdırıcı kodlayıcı yığınının çıxışı üzərində çox başlıqlı
+            diqqət həyata keçirən üçüncü alt-qat daxil edir.
+          </p>
+
+          <h3 id="attention">3.2 Diqqət</h3>
+          <p>
+            Diqqət funksiyası sorğu və açar-dəyər cütlərinin çıxışa
+            əlaqələndirilməsi kimi təsvir edilə bilər. Çıxış dəyərlərin çəkili
+            cəmi kimi hesablanır, burada hər dəyərə təyin olunan çəki sorğunun
+            müvafiq açarla uyğunluq funksiyası ilə hesablanır.
+          </p>
+
+          <h4>3.2.1 Miqyaslı Nöqtə-Məhsul Diqqəti</h4>
+          <p>
+            Bizim xüsusi diqqətimizi "Miqyaslı Nöqtə-Məhsul Diqqəti"
+            adlandırırıq. Giriş d<sub>k</sub> ölçüsündə sorğular və açarlardan
+            və d<sub>v</sub> ölçüsündə dəyərlərdən ibarətdir.
+          </p>
+
+          <div class="formula">
+            Attention(Q, K, V) = softmax(QK<sup>T</sup> / √d<sub>k</sub>) V
+          </div>
+
+          <p>
+            Kiçik d<sub>k</sub> dəyərləri üçün iki mexanizm oxşar şəkildə işləsə
+            də, toplanmış diqqət böyük d<sub>k</sub> dəyərləri üçün
+            miqyaslandırılmadan nöqtə məhsulu diqqətindən üstün performans
+            göstərir. Biz güman edirik ki, böyük d<sub>k</sub> dəyərləri üçün
+            nöqtə məhsulları böyük ölçülərdə artır və softmax funksiyasını son
+            dərəcə kiçik qradiyentlərə malik olan bölgələrə itələyir. Bu təsirə
+            qarşı çıxmaq üçün nöqtə məhsullarını 1/√d<sub>k</sub> ilə
+            miqyaslandırırıq.
+          </p>
+
+          <h4>3.2.2 Çox Başlıqlı Diqqət</h4>
+          <p>
+            d<sub>model</sub> ölçülü açarlar, dəyərlər və sorğularla tək diqqət
+            funksiyasını yerinə yetirmək əvəzinə, sorğuları, açarları və
+            dəyərləri müxtəlif öyrənilmiş xətti proyeksiyalarla h dəfə xətti
+            şəkildə proyeksiya etməyin faydalı olduğunu gördük.
+          </p>
+
+          <div class="formula">
+            MultiHead(Q, K, V) = Concat(head₁, ..., head<sub>h</sub>)W<sup
+              >O</sup
+            >
+          </div>
+
+          <p>
+            Çox başlıqlı diqqət modelə müxtəlif mövqelərdə müxtəlif təmsil
+            alt-məkanlarından məlumatı birgə şəkildə diqqət etməyə imkan verir.
+            Tək diqqət başı ilə ortalama bu imkanı məhdudlaşdırır.
+          </p>
+
+          <h3>3.3 Mövqe üzrə İrəli Bəsləmə Şəbəkələri</h3>
+          <p>
+            Diqqət alt-qatlarına əlavə olaraq, kodlayıcı və
+            dekodlaşdırıcımızdakı qatların hər biri hər mövqeyə ayrıca və eyni
+            şəkildə tətbiq olunan tam bağlı irəli bəsləmə şəbəkəsi ehtiva edir:
+          </p>
+
+          <div class="formula">FFN(x) = max(0, xW₁ + b₁)W₂ + b₂</div>
+
+          <h3>3.4 Mövqe Kodlaması</h3>
+          <p>
+            Modelimiz heç bir rekurrentlik və konvolyusiya ehtiva etmədiyindən,
+            modelin ardıcıllığın sırasından istifadə etməsi üçün ardıcıllıqdakı
+            tokenlərin nisbi və ya mütləq mövqeyi haqqında məlumat daxil
+            etməliyik. Bu məqsədlə kodlayıcı və dekodlaşdırıcı yığınlarının
+            altındakı giriş təsvirlərinə "mövqe kodlamaları" əlavə edirik.
+          </p>
+
+          <p>
+            Bu işdə biz müxtəlif tezliklərin sinus və kosinus funksiyalarından
+            istifadə edirik:
+          </p>
+
+          <div class="formula">
+            PE<sub>(pos,2i)</sub> = sin(pos/10000<sup>2i/d<sub>model</sub></sup
+            >)<br />
+            PE<sub>(pos,2i+1)</sub> = cos(pos/10000<sup
+              >2i/d<sub>model</sub></sup
+            >)
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>4. Niyə Özünə-Diqqət</h2>
+          <p>
+            Bu bölmədə biz özünə-diqqət qatlarının müxtəlif cəhətlərini bir
+            dəyişən uzunluqlu simvol təmsilləri ardıcıllığını eyni uzunluqlu
+            başqa ardıcıllığa əlaqələndirmək üçün adətən istifadə olunan
+            rekurrent və konvolyusiya qatları ilə müqayisə edirik.
+          </p>
+
+          <p>
+            Özünə-diqqətdən istifadəmizi motivləşdirərək üç istəyi nəzərdən
+            keçiririk:
+          </p>
+          <ul>
+            <li>Biri qat üzrə ümumi hesablama mürəkkəbliyi</li>
+            <li>
+              Digəri tələb olunan minimum ardıcıl əməliyyatların sayı ilə
+              ölçülən parallelləşdirilə bilən hesablama miqdarı
+            </li>
+            <li>
+              Üçüncüsü şəbəkədə uzun məsafəli asılılıqlar arasındakı yol
+              uzunluğu
+            </li>
+          </ul>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Qat Növü</th>
+                  <th>Qat üzrə Mürəkkəblik</th>
+                  <th>Ardıcıl Əməliyyatlar</th>
+                  <th>Maksimum Yol Uzunluğu</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Özünə-Diqqət</td>
+                  <td>O(n² · d)</td>
+                  <td>O(1)</td>
+                  <td>O(1)</td>
+                </tr>
+                <tr>
+                  <td>Rekurrent</td>
+                  <td>O(n · d²)</td>
+                  <td>O(n)</td>
+                  <td>O(n)</td>
+                </tr>
+                <tr>
+                  <td>Konvolyusiya</td>
+                  <td>O(k · n · d²)</td>
+                  <td>O(1)</td>
+                  <td>O(log<sub>k</sub>(n))</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Cədvəldə qeyd olunduğu kimi, özünə-diqqət qatı bütün mövqeləri sabit
+            sayda ardıcıl icra olunan əməliyyatlarla birləşdirir, halbuki
+            rekurrent qat O(n) ardıcıl əməliyyat tələb edir.
+          </p>
+        </div>
+
+        <div id="training" class="section">
+          <h2>5. Təlim</h2>
+
+          <h3>5.1 Təlim Məlumatları və Qruplama</h3>
+          <p>
+            Biz təqribən 4.5 milyon cümlə cütündən ibarət standart WMT 2014
+            İngilis-Alman dataseti üzərində təlim keçdik. Cümlələr bayt-cüt
+            kodlaması istifadə edərək kodlaşdırıldı. İngilis-Fransız üçün isə
+            36M cümlədən ibarət əhəmiyyətli dərəcədə daha böyük WMT 2014
+            İngilis-Fransız datasetindən istifadə etdik.
+          </p>
+
+          <h3>5.2 Aparat və Cədvəl</h3>
+          <p>
+            Modellərimizi 8 NVIDIA P100 GPU-ya malik bir maşında təlim verdik.
+            Məqalə boyu təsvir olunan hiperparametrləri istifadə edərək baza
+            modellərimiz üçün hər təlim addımı təqribən 0.4 saniyə çəkdi. Baza
+            modellərini ümumilikdə 100,000 addım və ya 12 saat təlim verdik.
+          </p>
+
+          <h3>5.3 Optimallaşdırıcı</h3>
+          <p>
+            Biz β₁ = 0.9, β₂ = 0.98 və ϵ = 10⁻⁹ ilə Adam optimallaşdırıcısından
+            istifadə etdik. Təlim prosesi boyu öyrənmə sürətini aşağıdakı
+            formulaya görə dəyişdirdik:
+          </p>
+
+          <div class="formula">
+            lrate = d<sub>model</sub><sup>-0.5</sup> ·
+            min(step_num<sup>-0.5</sup>, step_num · warmup_steps<sup>-1.5</sup>)
+          </div>
+
+          <h3>5.4 Reqularizasiya</h3>
+          <p>Təlim zamanı üç növ reqularizasiya tətbiq edirik:</p>
+          <ul>
+            <li>
+              <strong>Qalıq Dropout:</strong> Hər alt-qatın çıxışına dropout
+              tətbiq edirik. Baza model üçün P<sub>drop</sub> = 0.1 nisbətindən
+              istifadə edirik.
+            </li>
+            <li>
+              <strong>Etiket Hamarlaşdırması:</strong> Təlim zamanı ϵ<sub
+                >ls</sub
+              >
+              = 0.1 dəyərli etiket hamarlaşdırması tətbiq etdik.
+            </li>
+          </ul>
+        </div>
+
+        <div id="results" class="section">
+          <h2>6. Nəticələr</h2>
+
+          <h3>6.1 Maşın Tərcüməsi</h3>
+          <p>
+            WMT 2014 İngilis-Alman tərcüməsi tapşırığında böyük transformer
+            modeli ən yaxşı əvvəlki bildirilmiş modelləri (ansambllar daxil
+            olmaqla) 2.0 BLEU-dan çox üstələyir və yeni 28.4 BLEU ən müasir
+            nəticəsi qoyur.
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>BLEU (EN-DE)</th>
+                  <th>BLEU (EN-FR)</th>
+                  <th>Təlim Xərcləri (FLOPs)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ByteNet</td>
+                  <td>23.75</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>GNMT + RL</td>
+                  <td>24.6</td>
+                  <td>39.92</td>
+                  <td>2.3×10¹⁹</td>
+                </tr>
+                <tr>
+                  <td>ConvS2S</td>
+                  <td>25.16</td>
+                  <td>40.46</td>
+                  <td>9.6×10¹⁸</td>
+                </tr>
+                <tr style="background: #e8f5e9">
+                  <td><strong>Transformer (baza)</strong></td>
+                  <td><strong>27.3</strong></td>
+                  <td><strong>38.1</strong></td>
+                  <td><strong>3.3×10¹⁸</strong></td>
+                </tr>
+                <tr style="background: #c8e6c9">
+                  <td><strong>Transformer (böyük)</strong></td>
+                  <td><strong>28.4</strong></td>
+                  <td><strong>41.8</strong></td>
+                  <td><strong>2.3×10¹⁹</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            WMT 2014 İngilis-Fransız tərcüməsi tapşırığında böyük modelimiz 41.0
+            BLEU balı əldə edir və bütün əvvəllər dərc olunmuş tək modelləri
+            əvvəlki ən müasir modelin təlim xərcinin 1/4-dən az ilə üstələyir.
+          </p>
+
+          <h3>6.2 Model Variasiyaları</h3>
+          <p>
+            Transformer-in müxtəlif komponentlərinin əhəmiyyətini
+            qiymətləndirmək üçün baza modelimizi müxtəlif yollarla dəyişdirdik
+            və İngilis-Alman tərcüməsində performans dəyişikliyini ölçdük.
+          </p>
+
+          <section id="results">
+            <h3>6.3 İngilis Konstituent Təhlili</h3>
+            <p>
+              Transformer-in digər tapşırıqlara ümumiləşə biləcəyini
+              qiymətləndirmək üçün İngilis konstitüent təhlili üzərində
+              eksperimentlər apardıq. Təqribən 40K təlim cümləsindən ibarət Penn
+              Treebank-ın Wall Street Journal (WSJ) hissəsində
+              <code>d<sub>model</sub> = 1024</code> ilə 4 qatlı Transformer
+              təlim etdik.
+            </p>
+
+            <p>
+              Nəticələrimiz göstərir ki, tapşırıq-spesifik tənzimləmə olmamasına
+              baxmayaraq, modelimiz təəccüblü dərəcədə yaxşı performans
+              göstərdi. Bu tapşırıq xüsusi çətinliklər yaradır: çıxış
+              ardıcıllığı girişdən əhəmiyyətli dərəcədə uzundur və ciddi
+              struktur məhdudiyyətlərinə malikdir.
+            </p>
+
+            <p>
+              Biz <strong>Penn Treebank (WSJ)</strong> korpusunun təxminən 40
+              min cümləsindən ibarət hissəsində 4 qatlı,
+              <code>d<sub>model</sub> = 1024</code> olan Transformer təlim
+              etdik. Həmçinin, 17 milyon cümləlik böyük yarı-supervayz edilmiş
+              korpus (Berkley Parser və digər yüksək etibarlı verilənlər)
+              üzərində də modelin performansını yoxladıq.
+            </p>
+
+            <p>
+              Model hiperparametrlərinin çoxu dəyişdirilmədən saxlanıldı; yalnız
+              <em>dropout</em> və <em>beam search</em> kimi parametrlər kiçik
+              tənzimləmələr aldı.
+            </p>
+
+            <ul>
+              <li>
+                Transformer, cəmi 40K cümlə ilə təlim edildikdə belə, əvvəlki
+                RNN əsaslı modellərdən daha yaxşı nəticə göstərdi.
+              </li>
+              <li>
+                Yarı-supervayz edilmiş rejimdə isə
+                <strong>F1 = 92.7</strong> bal ilə o dövrdəki ən yaxşı modelləri
+                də keçdi (RNNG istisna olmaqla).
+              </li>
+            </ul>
+
+            <hr />
+
+            <h3>7. Nəticə (Conclusion)</h3>
+            <p>
+              Bu işdə biz <strong>Transformer</strong> adlanan ilk model
+              arxitekturasını təqdim etdik — o, yalnız diqqət
+              (<em>attention</em>) mexanizmlərinə əsaslanır və ənənəvi rekurrent
+              təbəqələri tamamilə əvəz edir.
+            </p>
+
+            <p>Tərcümə tapşırıqları üçün Transformer:</p>
+
+            <ul>
+              <li>
+                Rekurrent və konvolyusiya əsaslı arxitekturalardan daha sürətli
+                öyrənir,
+              </li>
+              <li>Daha yüksək keyfiyyətli nəticələr verir,</li>
+              <li>Və çox daha az təlim resursu tələb edir.</li>
+            </ul>
+
+            <p>
+              Transformer həmçinin dil xaricindəki digər problemlərə də tətbiq
+              oluna bilər — məsələn səs, şəkil və video emalı kimi çoxmodallı
+              sahələrə. Gələcək işlərdə müəlliflər lokal və məhdud diqqət
+              mexanizmləri ilə böyük giriş/çıxış ölçülərini daha səmərəli idarə
+              etməyi, həmçinin
+              <em>ardıcıllığın azaldılması (less-sequential generation)</em>
+              kimi tədqiqat istiqamətlərini qeyd edirlər.
+            </p>
+
+            <p
+              style="
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                color: #333;
+                line-height: 1.5;
+                margin: 10px 0;
+              "
+            >
+              Modelin kodu TensorFlow
+              <a
+                href="https://github.com/tensorflow/tensor2tensor"
+                target="_blank"
+                style="color: #1a73e8; text-decoration: none; font-weight: bold"
+              >
+                “tensor2tensor”
+              </a>
+              kitabxanasında açıq şəkildə təqdim olunmuşdur.
+            </p>
+
+            <blockquote>
+              <h3>Məqaləyə Əlavə</h3>
+              <strong>Transformer</strong> – diqqət mexanizminə əsaslanan,
+              rekurrentliyi aradan qaldıran ilk dil modeli arxitekturasıdır. Bu
+              məqalə ilə birlikdə “diqqət” anlayışı dərin öyrənmənin mərkəzinə
+              keçdi və bu, sonrakı illərdə
+              <em>BERT, GPT, T5, CLIP, DALL·E</em> və digər modellərin
+              yaranmasına yol açdı.
+            </blockquote>
+          </section>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
